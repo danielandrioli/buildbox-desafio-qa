@@ -12,3 +12,16 @@ Dessa forma, a leitura do código ficou legível e a manutenibilidade se tornou 
 - Cypress 13.7.3
 - Javascript
 - Faker-js
+
+#### 🔧 Instalação:
+Com o Node instalado, execute os seguintes comandos:
+``` 
+# Clone o repositório
+git clone https://github.com/danielandrioli/buildbox-desafio-qa
+
+# Entre na pasta do projeto buildbox-desafio-qa
+cd buildbox-desafio-qa
+
+# Instale as dependências
+npm install
+```
