@@ -1,49 +1,36 @@
 // import loc from '../support/locators'
 import { fa, faker } from "@faker-js/faker"
 import { form1, form2 } from "../support/locators"
-import CpfGenerator from "./GeradorCpf"
 
-Cypress.Commands.add('fillFirstRegistrationFormWithDummyInfo', () => {
-    const email = faker.internet.email()
-    const password = faker.internet.password()
-    const cpfGen = new CpfGenerator()
+Cypress.Commands.overwrite('type', (originalFn, subject, str, options) => {  // Now it's possible to type ''
+    if (str !== '') {
+        return originalFn(subject, str, options)
+    }
+    return subject
+})
 
-    cy.get(form1.nameField).type(faker.person.firstName())
-    cy.get(form1.lastNameField).type(faker.person.lastName())
-    cy.get(form1.birthdateField).type('01/12/1990')
-    cy.get(form1.cpfField).type(cpfGen.generateCpf())
-    cy.get(form1.emailField).type(email)
-    cy.get(form1.emailConfirmationField).type(email)
-    cy.get(form1.passwordField).type(password)
-    cy.get(form1.passwordConfirmationField).type(password)
+Cypress.Commands.add('fillFirstRegistrationForm', (user) => {
+    cy.get(form1.nameField).type(user.name)
+    cy.get(form1.lastNameField).type(user.lastName)
+    cy.get(form1.birthdateField).type(user.birthdate)
+    cy.get(form1.cpfField).type(user.cpf)
+    cy.get(form1.emailField).type(user.email)
+    cy.get(form1.emailConfirmationField).type(user.emailConfirmation)
+    cy.get(form1.passwordField).type(user.password)
+    cy.get(form1.passwordConfirmationField).type(user.passwordConfirmation)
     cy.get(form1.englishLevelSelect).contains('Selecione').click()
-    cy.get(form1.englishLevelSelect).contains('Advanced').click()
-    cy.get(form1.termsAndPolicyCheckbox).check()
+    user.englishLevel ? cy.get(form1.englishLevelSelect).contains(user.englishLevel).click() : cy.get(form1.englishLevelSelect).contains('Selecione').click()
+    user.acceptTerms ? cy.get(form1.termsAndPolicyCheckbox).check() : ''
 })
 
-Cypress.Commands.add('fillSecondRegistrationFormWithDummyInfo', () => {
-    cy.get(form2.cepField).type('99010-000')
-    cy.get(form2.residencialNumberField).type(faker.number.int(1000))
-    cy.get(form2.adressComplementField).type("Next to Pollos Hermanos")
-
-    user.name ? cy.get(form2.adressComplementField).type(user.name) : ''
-    null 
+Cypress.Commands.add('validateMandatoryField', (fieldSelector, message = 'Preencha este campo.') => {
+    cy.get(fieldSelector).then(($input) => {
+        expect($input[0].validationMessage).to.eq(message)
+      })
+})
+Cypress.Commands.add('fillSecondRegistrationForm', (user) => {
+    cy.get(form2.cepField).type(user.cep)
+    cy.get(form2.residencialNumberField).type(user.residencialNumber)
+    cy.get(form2.adressComplementField).type(user.adressComplement)
 })
 
-
-  
-
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
