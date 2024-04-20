@@ -48,6 +48,7 @@ describe('template spec', () => {
   it('Validade mandatory fields - Birthdate - empty field', () => {
     user.birthdate = ''
     cy.fillFirstRegistrationForm(user)
+    cy.get(form1.submitBtn).click()
 
     cy.validateMandatoryField(form1.birthdateField)
   })
@@ -55,6 +56,7 @@ describe('template spec', () => {
   it('Validade mandatory fields - CPF - empty field', () => {
     user.cpf = ''
     cy.fillFirstRegistrationForm(user)
+    cy.get(form1.submitBtn).click()
 
     cy.validateMandatoryField(form1.cpfField)
   })
@@ -62,6 +64,7 @@ describe('template spec', () => {
   it('Validade mandatory fields - Email - empty field', () => {
     user.email = ''
     cy.fillFirstRegistrationForm(user)
+    cy.get(form1.submitBtn).click()
 
     cy.validateMandatoryField(form1.emailField)
   })
@@ -69,6 +72,7 @@ describe('template spec', () => {
   it('Validade mandatory fields - Email confirmation - empty field', () => {
     user.emailConfirmation = ''
     cy.fillFirstRegistrationForm(user)
+    cy.get(form1.submitBtn).click()
 
     cy.validateMandatoryField(form1.emailConfirmationField)
   })
